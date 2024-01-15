@@ -1,216 +1,308 @@
+// import 'package:flutter/material.dart';
+// import 'package:flutter_screenutil/flutter_screenutil.dart';
+// import 'package:get/get.dart';
+//
+// import 'views/pages/homePage/homePage.dart';
+//
+// void main() async{
+//   // await ScreenUtil.ensureScreenSize();
+//   runApp(const MyApp());
+// }
+//
+// class MyApp extends StatelessWidget {
+//   const MyApp({super.key});
+//
+//   // This widget is the root of your application.
+//   @override
+//   Widget build(BuildContext context) {
+//     return ScreenUtilInit(
+//       builder: (context, child) => GetMaterialApp(
+//         debugShowCheckedModeBanner: false,
+//         title: 'Flutter Demo',
+//           theme: ThemeData.from(
+//             colorScheme: const ColorScheme.light(),
+//           ).copyWith(
+//             pageTransitionsTheme: const PageTransitionsTheme(
+//               builders: <TargetPlatform, PageTransitionsBuilder>{
+//                 TargetPlatform.android: ZoomPageTransitionsBuilder(),
+//               },
+//             ),
+//           ),
+//         home: HomePage()
+//       ),
+//       designSize: Size(360, 690),
+//     );
+//   }
+// }
+//
+//
+
+
+
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:stylish_bottom_bar/model/bar_items.dart';
+import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
 
-import 'views/pages/homePage/homePage.dart';
+import 'views/widgets/custom_bottom_nav_bar/custom_bottom_nav_bar.dart';
 
-void main() async{
-  // await ScreenUtil.ensureScreenSize();
+void main() {
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
+  const MyApp({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      builder: (context, child) => GetMaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
-          theme: ThemeData.from(
-            colorScheme: const ColorScheme.light(),
-          ).copyWith(
-            pageTransitionsTheme: const PageTransitionsTheme(
-              builders: <TargetPlatform, PageTransitionsBuilder>{
-                TargetPlatform.android: ZoomPageTransitionsBuilder(),
-              },
-            ),
-          ),
-        home: HomePage()
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Stylish Bottom Navigation Bar Example',
+      theme: ThemeData(
+        // useMaterial3: true,
+        primarySwatch: Colors.green,
       ),
-      designSize: Size(360, 690),
+       // home: const BubbelBarExample(),
+       // home: const AnimatedBarExample(),
+        home:  BottomAnimatedBar(),
     );
   }
 }
 
 
 
+
+class AnimatedBarExample extends StatefulWidget {
+  const AnimatedBarExample({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<AnimatedBarExample> createState() => _AnimatedBarExampleState();
+}
+
+class _AnimatedBarExampleState extends State<AnimatedBarExample> {
+  dynamic selected;
+  var heart = false;
+  PageController controller = PageController();
+
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      extendBody: true, //to make floating action button notch transparent
+
+      //to avoid the floating action button overlapping behavior,
+      // when a soft keyboard is displayed
+      // resizeToAvoidBottomInset: false,
+
+      bottomNavigationBar: StylishBottomBar(
+        ///<--------------------animated down to up and hide titie text------------------->
+        option: AnimatedBarOptions(
+          // // iconSize: 32,
+          // barAnimation: BarAnimation.fade,
+          // iconStyle: IconStyle.animated,
+          // // opacity: 0.3,
+        ),
+
+
+
+        ///<------------------------bottom nab items------------------->
+        items: [
+          BottomBarItem(
+            icon: const Icon(
+              Icons.house_outlined,
+            ),
+            selectedIcon: const Icon(Icons.house_rounded),
+            // selectedColor: Colors.teal,
+            backgroundColor: Colors.teal,
+            title: const Text('Home'),
+            ///<---------------------------you can use badge here------------------>
+            // badge: const Text('9+'),
+            // showBadge: true,
+          ),
+
+
+
+          BottomBarItem(
+            icon: const Icon(Icons.star_border_rounded),
+            selectedIcon: const Icon(Icons.star_rounded),
+            selectedColor: Colors.red,
+            // unSelectedColor: Colors.purple,
+            // backgroundColor: Colors.orange,
+            title: const Text('Star'),
+          ),
+
+
+
+          BottomBarItem(
+              icon: SvgPicture.asset("ddd"),
+              selectedIcon: const Icon(
+                Icons.style,
+              ),
+              backgroundColor: Colors.amber,
+              selectedColor: Colors.deepOrangeAccent,
+              title: const Text('Style')),
+
+
+
+          BottomBarItem(
+              icon: const Icon(
+                Icons.person_outline,
+              ),
+              selectedIcon: const Icon(
+                Icons.person,
+              ),
+              backgroundColor: Colors.purpleAccent,
+              selectedColor: Colors.deepPurple,
+              title: const Text('Profile')
+          ),
+        ],
+
+
+
+
+        hasNotch: true,
+        fabLocation: StylishBarFabLocation.center,
+        currentIndex: selected ?? 0,
+        onTap: (index) {
+          controller.jumpToPage(index);
+          setState(() {
+            selected = index;
+          });
+        },
+      ),
+
+
+
+
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          setState(() {
+            heart = !heart;
+          });
+        },
+        backgroundColor: Colors.white,
+        child: Icon(
+          heart ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
+          color: Colors.red,
+        ),
+      ),
+
+
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
+      body: SafeArea(
+        child: PageView(
+          controller: controller,
+          children: const [
+            Center(child: Text('Home')),
+            Center(child: Text('Star')),
+            Center(child: Text('Style')),
+            Center(child: Text('Profile')),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 //
-//
-// // Copyright 2013 The Flutter Authors. All rights reserved.
-// // Use of this source code is governed by a BSD-style license that can be
-// // found in the LICENSE file.
-//
-// import 'package:flutter/material.dart';
-// import 'package:flutter/scheduler.dart';
-//
-//
-// void main() {
-//   runApp(
-//     MaterialApp(
-//       theme: ThemeData.from(
-//         colorScheme: const ColorScheme.light(),
-//       ).copyWith(
-//         pageTransitionsTheme: const PageTransitionsTheme(
-//           builders: <TargetPlatform, PageTransitionsBuilder>{
-//             TargetPlatform.android: ZoomPageTransitionsBuilder(),
-//           },
-//         ),
-//       ),
-//       home: _TransitionsHomePage(),
-//     ),
-//   );
-// }
-//
-// class _TransitionsHomePage extends StatefulWidget {
-//   @override
-//   _TransitionsHomePageState createState() => _TransitionsHomePageState();
-// }
-//
-// class _TransitionsHomePageState extends State<_TransitionsHomePage> {
-//   bool _slowAnimations = false;
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(title: const Text('Material Transitions')),
-//       body: Column(
-//         children: <Widget>[
-//           Expanded(
-//             child: ListView(
-//               children: <Widget>[
-//                 _TransitionListTile(
-//                   title: 'Container transform',
-//                   subtitle: 'OpenContainer',
-//                   onTap: () {
-//                     Navigator.of(context).push(
-//                       MaterialPageRoute<void>(
-//                         builder: (BuildContext context) {
-//                           return Container(
-//                             height: 200,
-//                             width: 200,
-//                             color: Colors.green,
-//                           );
-//                         },
-//                       ),
-//                     );
-//                   },
-//                 ),
-//                 _TransitionListTile(
-//                   title: 'Shared axis',
-//                   subtitle: 'SharedAxisTransition',
-//                   onTap: () {
-//                     Navigator.of(context).push(
-//                       MaterialPageRoute<void>(
-//                         builder: (BuildContext context) {
-//                           return Container(
-//                             height: 200,
-//                             width: 200,
-//                             color: Colors.green,
-//                           );
-//                         },
-//                       ),
-//                     );
-//                   },
-//                 ),
-//                 _TransitionListTile(
-//                   title: 'Fade through',
-//                   subtitle: 'FadeThroughTransition',
-//                   onTap: () {
-//                     Navigator.of(context).push(
-//                       MaterialPageRoute<void>(
-//                         builder: (BuildContext context) {
-//                           return Container(
-//                             height: 200,
-//                             width: 200,
-//                             color: Colors.green,
-//                           );
-//                         },
-//                       ),
-//                     );
-//                   },
-//                 ),
-//                 _TransitionListTile(
-//                   title: 'Fade',
-//                   subtitle: 'FadeScaleTransition',
-//                   onTap: () {
-//                     Navigator.of(context).push(
-//                       MaterialPageRoute<void>(
-//                         builder: (BuildContext context) {
-//                           return Container(
-//                             height: 200,
-//                             width: 200,
-//                             color: Colors.green,
-//                           );
-//                         },
-//                       ),
-//                     );
-//                   },
-//                 ),
-//               ],
-//             ),
-//           ),
-//           const Divider(height: 0.0),
-//           SafeArea(
-//             child: SwitchListTile(
-//               value: _slowAnimations,
-//               onChanged: (bool value) async {
-//                 setState(() {
-//                   _slowAnimations = value;
-//                 });
-//                 // Wait until the Switch is done animating before actually slowing
-//                 // down time.
-//                 if (_slowAnimations) {
-//                   await Future<void>.delayed(const Duration(milliseconds: 300));
-//                 }
-//                 timeDilation = _slowAnimations ? 20.0 : 1.0;
-//               },
-//               title: const Text('Slow animations'),
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
-//
-//
-// class _TransitionListTile extends StatelessWidget {
-//   const _TransitionListTile({
-//     this.onTap,
-//     required this.title,
-//     required this.subtitle,
-//   });
-//
-//   final GestureTapCallback? onTap;
-//   final String title;
-//   final String subtitle;
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return ListTile(
-//       contentPadding: const EdgeInsets.symmetric(
-//         horizontal: 15.0,
-//       ),
-//       leading: Container(
-//         width: 40.0,
-//         height: 40.0,
-//         decoration: BoxDecoration(
-//           borderRadius: BorderRadius.circular(20.0),
-//           border: Border.all(
-//             color: Colors.black54,
-//           ),
-//         ),
-//         child: const Icon(
-//           Icons.play_arrow,
-//           size: 35,
-//         ),
-//       ),
-//       onTap: onTap,
-//       title: Text(title),
-//       subtitle: Text(subtitle),
-//     );
-//   }
-// }
+//Example to setup Bubble Bottom Bar with PageView
+class BubbelBarExample extends StatefulWidget {
+  const BubbelBarExample({Key? key}) : super(key: key);
+
+  @override
+  State<BubbelBarExample> createState() => _BubbelBarExampleState();
+}
+
+class _BubbelBarExampleState extends State<BubbelBarExample> {
+  PageController controller = PageController(initialPage: 0);
+  var selected = 0;
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: PageView(
+        controller: controller,
+        children: const [
+          // Home(),
+          // Add(),
+          // Profile(),
+        ],
+      ),
+      bottomNavigationBar: StylishBottomBar(
+        option: BubbleBarOptions(
+          // barStyle: BubbleBarStyle.vertical,
+          barStyle: BubbleBarStyle.horizotnal,
+          bubbleFillStyle: BubbleFillStyle.fill,
+          // bubbleFillStyle: BubbleFillStyle.outlined,
+          opacity: 0.3,
+        ),
+        items: [
+          BottomBarItem(
+            icon: const Icon(Icons.abc),
+            title: const Text('Abc'),
+            backgroundColor: Colors.red,
+
+            // selectedColor: Colors.pink,
+            selectedIcon: const Icon(Icons.read_more),
+            badge: const Badge(),
+            showBadge: true,
+          ),
+          BottomBarItem(
+            icon: const Icon(Icons.safety_divider),
+            title: const Text('Safety'),
+            selectedColor: Colors.orange,
+            backgroundColor: Colors.orange,
+          ),
+          BottomBarItem(
+            icon: const Icon(Icons.cabin),
+            title: const Text('Cabin'),
+            backgroundColor: Colors.purple,
+          ),
+        ],
+        // fabLocation: StylishBarFabLocation.end,
+        // hasNotch: true,
+        currentIndex: selected,
+        onTap: (index) {
+          setState(() {
+            selected = index;
+            controller.jumpToPage(index);
+          });
+        },
+      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {},
+      //   child: const Icon(Icons.emoji_emotions),
+      // ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+    );
+  }
+}

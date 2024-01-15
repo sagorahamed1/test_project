@@ -5,6 +5,14 @@ class TwitterController extends GetxController{
   RxInt notificationIndex = 0.obs;
 
 
+  @override
+  void onInit() {
+    // TODO: implement onInit
+    super.onInit();
+    toggleBoolValue();
+    Increment();
+  }
+
   void toggleBoolValue(){
     isValue.value = !isValue.value;
   }
@@ -12,4 +20,6 @@ class TwitterController extends GetxController{
   void Increment(){
     notificationIndex.value++;
   }
+
+
 }

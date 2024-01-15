@@ -41,6 +41,8 @@ dependencies:
   get: ^4.6.6
   animations: ^2.0.11
   animate_do: ^3.1.2
+  flutter_staggered_animations: ^1.1.1
+  stylish_bottom_bar: ^1.0.3
 
 dev_dependencies:
   flutter_test:

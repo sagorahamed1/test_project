@@ -1,3 +1,4 @@
+import 'package:auto_animaition/views/pages/staggered_animations/staggered_animations.dart';
 import 'package:auto_animaition/views/pages/twitter_page/twitter_page.dart';
 import 'package:auto_animaition/views/widgets/custom_button/custom_button.dart';
 import 'package:auto_animaition/views/widgets/custom_button_with_image/custom_button_with_imgae.dart';
@@ -25,8 +26,13 @@ class HomePage extends StatelessWidget {
               height: 100.h,
             ),
 
+
+
             /// <----------------custom text------------------------->
             CustomText(text: "Custom Text", color: Colors.green, fontsize: 30.sp),
+
+
+
 
             ///<------------------custom button---------------------->
             CustomButton(
@@ -41,6 +47,26 @@ class HomePage extends StatelessWidget {
               height: 50,
             ),
             SizedBox(height: 30,),
+
+
+
+            ///<--------------------animation staggered page navigated---------------------->
+            CustomButton(
+              title: "Custom Button",
+              onTap: () {
+                // Navigator.push(context, MaterialPageRoute(builder: (context)=> const FirstPage()));
+                Get.to(StaggeredAnimationPage(),
+                    transition: Transition.zoom
+                );
+              },
+              color: Colors.cyan,
+              height: 50,
+            ),
+            SizedBox(height: 30,),
+
+
+
+
 
             ///<----------------------coutom button with image or icon-------------------------->
             CustomButtomWithImage(
